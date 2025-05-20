@@ -13,8 +13,7 @@ def get_sqlalchemy_schema(engine):
     schema_info = []
     for table in inspector.get_table_names():
         columns = inspector.get_columns(table)
-        column_defs = ", ".join([f"{col['name']} ({col['type']})" for col in columns])
-        schema_info.append(f"Table: {table} → Columns: {column_defs}")
+        schema_info.append(f"Table: {table}")
     return "\n".join(schema_info)
 
 def get_mongo_schema(db):
@@ -91,7 +90,6 @@ if st.sidebar.button("Connect"):
             schema = get_sqlalchemy_schema(engine)
             st.session_state["schema"] = schema
             st.success(f"{db_type} connected successfully!")
-            st.code(schema)
         elif db_type == "MongoDB":
             client = MongoClient(connection_string)
             db = client[database]
@@ -100,7 +98,6 @@ if st.sidebar.button("Connect"):
             schema = get_mongo_schema(db)
             st.session_state["schema"] = schema
             st.success("MongoDB connected successfully!")
-            st.code(schema)
     except Exception as e:
         st.error(f"Connection failed: {e}")
 
